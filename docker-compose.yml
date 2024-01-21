@@ -15,11 +15,11 @@ services:
         source: elk_data
         target: /usr/share/elasticsearch/data
     ports:
-      - "51.159.178.83:9200:9200"
-      - "51.159.178.83:9300:9300"
+      - "${MAIN_IP}:9200:9200"
+      - "${MAIN_IP}:9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-      ELASTIC_PASSWORD: changeme
+      ELASTIC_PASSWORD: ${PASSWD}
       # Use single node discovery in order to disable production mode and avoid bootstrap checks
       # see https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
@@ -41,9 +41,9 @@ services:
         target: /usr/share/logstash/pipeline
         read_only: true
     ports:
-      - "51.159.178.83:5000:5000/tcp"
-      - "51.159.178.83:5000:5000/udp"
-      - "51.159.178.83:9600:9600"
+      - "${MAIN_IP}:5000:5000/tcp"
+      - "${MAIN_IP}:5000:5000/udp"
+      - "${MAIN_IP}:9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
@@ -62,7 +62,7 @@ services:
         target: /usr/share/kibana/config/kibana.yml
         read_only: true
     ports:
-      - "51.159.178.83:5601:5601"
+      - "${MAIN_IP}:5601:5601"
     networks:
       - elk_networks
 
@@ -74,7 +74,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: "51.159.178.0/24"
+        - subnet: "${MAIN_SUBNET}/24"
 
 volumes:
   elk_data:

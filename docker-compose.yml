@@ -15,8 +15,8 @@ services:
         source: elk_data
         target: /usr/share/elasticsearch/data
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - "51.159.178.83:9200:9200"
+      - "51.159.178.83:9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       ELASTIC_PASSWORD: changeme
@@ -24,8 +24,7 @@ services:
       # see https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
     networks:
-      elk_networks:
-        ipv4_address : 51.159.178.83
+      - elk_networks
 
   logstash:
     build:
@@ -42,14 +41,13 @@ services:
         target: /usr/share/logstash/pipeline
         read_only: true
     ports:
-      - "5000:5000/tcp"
-      - "5000:5000/udp"
-      - "9600:9600"
+      - "51.159.178.83:5000:5000/tcp"
+      - "51.159.178.83:5000:5000/udp"
+      - "51.159.178.83:9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
-      elk_networks:
-        ipv4_address : 51.159.178.83
+      - elk_networks
     depends_on:
       - elasticsearch
 
@@ -64,10 +62,9 @@ services:
         target: /usr/share/kibana/config/kibana.yml
         read_only: true
     ports:
-      - "5601:5601"
+      - "51.159.178.83:5601:5601"
     networks:
-      elk_networks:
-        ipv4_address : 51.159.178.83
+      - elk_networks
 
     depends_on:
       - elasticsearch

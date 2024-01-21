@@ -24,7 +24,8 @@ services:
       # see https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
     networks:
-      - elk_networks
+      elk_networks:
+        ipv4_address : 51.159.178.83
 
   logstash:
     build:
@@ -47,7 +48,8 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
-      - elk_networks
+      elk_networks:
+        ipv4_address : 51.159.178.83
     depends_on:
       - elasticsearch
 
@@ -64,13 +66,18 @@ services:
     ports:
       - "5601:5601"
     networks:
-      - elk_networks
+      elk_networks:
+        ipv4_address : 51.159.178.83
+
     depends_on:
       - elasticsearch
 
 networks:
   elk_networks:
     driver: bridge
+    ipam:
+      config:
+        - subnet: "51.159.178.0/24"
 
 volumes:
   elk_data:
